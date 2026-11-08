@@ -26,7 +26,8 @@ class EnsureCurrentCycleUseCase @Inject constructor(
         cycleType: CycleType = CycleType.MONTHLY,
         cycleStartDay: Int = 1,
         zone: ZoneId = ZoneId.of(DateTimeUtils.DEFAULT_TIMEZONE)
-    ): Result<BudgetCycleEntity> = try {
+    ): Result<BudgetCycleEntity> {
+        return try {
         val now = System.currentTimeMillis()
         val today = LocalDate.now(zone)
 
@@ -66,5 +67,6 @@ class EnsureCurrentCycleUseCase @Inject constructor(
         Result.Success(newCycle.copy(id = cycleId))
     } catch (e: Exception) {
         Result.Failure(HasbiError.DatabaseError(e.message ?: "Ensure cycle failed"))
+    }
     }
 }
