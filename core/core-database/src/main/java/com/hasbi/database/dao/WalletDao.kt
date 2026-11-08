@@ -113,12 +113,6 @@ interface WalletDao {
     @Query(
         """
         SELECT
-            w.id AS id,
-            w.name AS name,
-            w.icon AS icon,
-            w.colorHex AS colorHex,
-            w.type AS type,
-            w.currencyCode AS currencyCode,
             w.initialBalance
             + COALESCE((SELECT SUM(amount) FROM transactions
                        WHERE walletId = w.id AND type = 'INCOME' AND isDeleted = 0), 0)
