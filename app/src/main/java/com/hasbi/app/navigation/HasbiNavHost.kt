@@ -36,11 +36,14 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.hasbi.budgets.BudgetsScreen
 import com.hasbi.dashboard.DashboardScreen
 import com.hasbi.onboarding.OnboardingNavHost
 import com.hasbi.transactions.detail.TransactionDetailSheet
 import com.hasbi.transactions.list.TransactionsListScreen
 import com.hasbi.transactions.quickadd.QuickAddSheet
+import com.hasbi.wallets.add.AddWalletScreen
+import com.hasbi.wallets.list.WalletsScreen
 
 /**
  * Top-level navigation host.
@@ -146,10 +149,24 @@ fun HasbiNavHost(isOnboarded: Boolean) {
                 )
             }
             composable(Routes.BUDGETS) {
-                PlaceholderScreen("Budgets — Cycle + Categories\n\n(Week 9)")
+                BudgetsScreen(
+                    onAddBudgetClick = { /* TODO: Add budget screen */ }
+                )
             }
             composable(Routes.WALLETS) {
-                PlaceholderScreen("Wallets — Cash, Bank, JazzCash, Easypaisa\n\n(Week 8)")
+                WalletsScreen(
+                    onWalletClick = { walletId ->
+                        // TODO: Wallet detail screen
+                    },
+                    onAddWalletClick = { navController.navigate("wallet/add") },
+                    onTransferClick = { /* TODO: Transfer sheet */ }
+                )
+            }
+            composable("wallet/add") {
+                AddWalletScreen(
+                    onBack = { navController.popBackStack() },
+                    onSaved = { navController.popBackStack() }
+                )
             }
             composable(Routes.MORE) {
                 PlaceholderScreen("More — Settings, Backup, About\n\n(Week 11)")

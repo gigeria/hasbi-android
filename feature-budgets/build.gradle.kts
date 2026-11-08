@@ -32,6 +32,7 @@ dependencies {
     implementation(project(":core:core-design"))
     implementation(project(":core:core-domain"))
     implementation(project(":core:core-data"))
+    implementation(project(":core:core-database"))  // For CycleType, BudgetWithSpent
     implementation(project(":core:core-util"))
 
     // Compose
