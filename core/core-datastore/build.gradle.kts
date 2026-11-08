@@ -24,6 +24,7 @@ android {
 }
 
 dependencies {
+    implementation(project(":core:core-database"))  // For CycleType, CurrencyEntity
     implementation(project(":core:core-domain"))
 
     implementation(libs.androidx.core.ktx)
