@@ -12,7 +12,6 @@ import com.hasbi.database.dao.OnboardingDao
 import com.hasbi.database.dao.TransactionDao
 import com.hasbi.database.dao.WalletDao
 import com.hasbi.database.migration.HasbiMigrations
-import com.hasbi.database.seed.HasbiDatabaseCallback
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
