@@ -58,7 +58,7 @@ interface BudgetDao {
             b.id AS id,
             b.cycleId AS cycleId,
             b.categoryId AS categoryId,
-            b.limit AS `limit`,
+            b.`limit` AS `limit`,
             b.warningThreshold AS warningThreshold,
             b.createdAt AS createdAt,
             b.updatedAt AS updatedAt,
