@@ -1,6 +1,7 @@
 package com.hasbi.domain.usecase.onboarding
 
 import com.hasbi.database.dao.OnboardingDao
+import com.hasbi.database.dao.OnboardingResult
 import com.hasbi.database.entity.BudgetCycleEntity
 import com.hasbi.database.entity.BudgetEntity
 import com.hasbi.database.entity.CycleType
