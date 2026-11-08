@@ -82,7 +82,8 @@ class BudgetRepositoryImpl @Inject constructor(
     override suspend fun getCategoryBudget(cycleId: Long, categoryId: Long): BudgetEntity? =
         budgetDao.getCategoryBudget(cycleId, categoryId)
 
-    override suspend fun createBudget(budget: BudgetEntity): Result<Long> = try {
+    override suspend fun createBudget(budget: BudgetEntity): Result<Long> {
+        return try {
         // Check for existing overall budget (only one allowed per cycle)
         if (budget.categoryId == null) {
             val existingCount = budgetDao.countOverallBudgets(budget.cycleId)
@@ -96,6 +97,7 @@ class BudgetRepositoryImpl @Inject constructor(
         Result.Success(id)
     } catch (e: Exception) {
         Result.Failure(HasbiError.DatabaseError(e.message ?: "Create budget failed"))
+    }
     }
 
     override suspend fun updateBudget(budget: BudgetEntity): Result<Unit> = try {

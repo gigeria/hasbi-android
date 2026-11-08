@@ -31,7 +31,8 @@ class CategoryRepositoryImpl @Inject constructor(
     override suspend fun getById(id: Long): Category? =
         categoryDao.getById(id)?.toDomain()
 
-    override suspend fun create(category: Category): Result<Long> = try {
+    override suspend fun create(category: Category): Result<Long> {
+        return try {
         val existing = categoryDao.countByName(category.name, category.group)
         if (existing > 0) {
             return Result.Failure(HasbiError.DuplicateCategoryError(category.name))
@@ -40,6 +41,7 @@ class CategoryRepositoryImpl @Inject constructor(
         Result.Success(id)
     } catch (e: Exception) {
         Result.Failure(HasbiError.DatabaseError(e.message ?: "Create category failed"))
+    }
     }
 
     override suspend fun update(category: Category): Result<Unit> = try {
@@ -86,7 +88,7 @@ class CategoryRepositoryImpl @Inject constructor(
             val defaults = CategorySeeder.getSeedCategories(now)
             defaults.forEach { category ->
                 try {
-                    categoryDao.insert(it = category)
+                    categoryDao.insert(category)
                 } catch (e: Exception) {
                     // already exists — ignore
                 }
