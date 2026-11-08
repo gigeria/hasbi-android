@@ -1,7 +1,5 @@
 package com.hasbi.util.money
 
-import com.hasbi.database.entity.CurrencyEntity
-import com.hasbi.database.entity.SymbolPosition
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.text.DecimalFormat
@@ -17,6 +15,9 @@ import java.text.DecimalFormat
  * Pakistani number format: 1,00,000 (lakh system)
  * Western number format: 1,000,000
  * Indian number format: 1,00,000 (same as Pakistani)
+ *
+ * Note: Pure Kotlin — no Android dependencies.
+ * Uses CurrencyInfo data class instead of CurrencyEntity (which is Android-specific).
  */
 class MoneyFormatter {
 
@@ -28,7 +29,7 @@ class MoneyFormatter {
      * @param format Number format style
      * @return Formatted string like "Rs. 1,234.56" or "¥1,234"
      */
-    fun format(minorUnits: Long, currency: CurrencyEntity, format: NumberFormatStyle = NumberFormatStyle.WESTERN): String {
+    fun format(minorUnits: Long, currency: CurrencyInfo, format: NumberFormatStyle = NumberFormatStyle.WESTERN): String {
         val divisor = BigDecimal.TEN.pow(currency.minorUnitExponent)
         val majorAmount = BigDecimal(minorUnits).divide(divisor, currency.minorUnitExponent, RoundingMode.HALF_UP)
 
@@ -43,7 +44,7 @@ class MoneyFormatter {
     /**
      * Format without currency symbol (just the number).
      */
-    fun formatNumberOnly(minorUnits: Long, currency: CurrencyEntity, format: NumberFormatStyle = NumberFormatStyle.WESTERN): String {
+    fun formatNumberOnly(minorUnits: Long, currency: CurrencyInfo, format: NumberFormatStyle = NumberFormatStyle.WESTERN): String {
         val divisor = BigDecimal.TEN.pow(currency.minorUnitExponent)
         val majorAmount = BigDecimal(minorUnits).divide(divisor, currency.minorUnitExponent, RoundingMode.HALF_UP)
         return formatNumber(majorAmount, currency.minorUnitExponent, format)
@@ -54,7 +55,7 @@ class MoneyFormatter {
      * Expense: "-Rs. 1,234"
      * Income: "+Rs. 5,000"
      */
-    fun formatWithSign(minorUnits: Long, currency: CurrencyEntity, isIncome: Boolean, format: NumberFormatStyle = NumberFormatStyle.WESTERN): String {
+    fun formatWithSign(minorUnits: Long, currency: CurrencyInfo, isIncome: Boolean, format: NumberFormatStyle = NumberFormatStyle.WESTERN): String {
         val formatted = format(minorUnits, currency, format)
         return if (isIncome) "+$formatted" else "−$formatted"
     }
@@ -69,24 +70,34 @@ class MoneyFormatter {
         return df.format(amount)
     }
 
-    /**
-     * Western format: 1,000,000.00
-     */
     private fun buildWesternPattern(decimalPlaces: Int): String {
         val decimals = if (decimalPlaces > 0) "." + "0".repeat(decimalPlaces) else ""
         return "#,##0$decimals"
     }
 
-    /**
-     * Pakistani/Indian format: 10,00,000.00 (lakh system)
-     * Last 3 digits before decimal grouped normally, then groups of 2.
-     */
     private fun buildPakistaniPattern(decimalPlaces: Int): String {
         val decimals = if (decimalPlaces > 0) "." + "0".repeat(decimalPlaces) else ""
-        // #,##,##0 = Pakistani pattern
         return "#,##,##0$decimals"
     }
 }
+
+/**
+ * Currency info — pure Kotlin version (no Android deps).
+ *
+ * Mapped from CurrencyEntity in core-data layer.
+ */
+data class CurrencyInfo(
+    val code: String,
+    val name: String,
+    val symbol: String,
+    val minorUnitExponent: Int,
+    val decimalSeparator: String,
+    val thousandsSeparator: String,
+    val symbolPosition: SymbolPosition,
+    val isDefault: Boolean = false
+)
+
+enum class SymbolPosition { BEFORE, AFTER }
 
 enum class NumberFormatStyle {
     WESTERN,      // 1,000,000.00
