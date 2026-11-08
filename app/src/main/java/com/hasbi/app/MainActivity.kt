@@ -5,31 +5,41 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.lifecycleScope
 import com.hasbi.app.navigation.HasbiNavHost
 import com.hasbi.design.theme.HasbiTheme
+import com.hasbi.domain.repository.SettingsRepository
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    @Inject
+    lateinit var settingsRepository: SettingsRepository
+
     override fun onCreate(savedInstanceState: Bundle?) {
-        // Native SplashScreen API — installs before content is set
+        // Native SplashScreen API
         val splashScreen = installSplashScreen()
 
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        // TODO: Set isOnboarded check from DataStore (Week 4)
-        // For Week 1: always show onboarding placeholder
-        var isReady = false
-        splashScreen.setKeepOnScreenCondition { !isReady }
+        // Check onboarding status before showing content
+        var isOnboarded: Boolean? = null
+        splashScreen.setKeepOnScreenCondition { isOnboarded == null }
 
-        setContent {
-            HasbiTheme {
-                HasbiNavHost(isOnboarded = false)
+        lifecycleScope.launch {
+            val settings = settingsRepository.settings.first()
+            isOnboarded = settings.isOnboarded
+
+            setContent {
+                HasbiTheme {
+                    HasbiNavHost(isOnboarded = isOnboarded ?: false)
+                }
             }
         }
-
-        // Simulate initialization completion
-        isReady = true
     }
 }

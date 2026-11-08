@@ -63,7 +63,7 @@ fun DashboardScreen() {
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = "Mera Hisab, Mera Saathi",
+            text = "Mera Hisab, Mera Yaqeen",
             color = colors.textSecondary,
             fontSize = 14.sp,
             fontWeight = FontWeight.Medium

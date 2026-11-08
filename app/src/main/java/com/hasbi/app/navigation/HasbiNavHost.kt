@@ -20,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
@@ -27,14 +28,14 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.hasbi.dashboard.DashboardScreen
+import com.hasbi.onboarding.OnboardingNavHost
 
 /**
  * Top-level navigation host.
  *
- * Week 1: only Dashboard placeholder is real; rest are text placeholders.
- * Week 4+: real feature screens replace placeholders.
- *
- * Pattern: single Scaffold wraps NavHost. Bottom bar shown only on main routes.
+ * Routes:
+ *   - Onboarding (3 screens): Welcome → Wallet → Budget → Dashboard
+ *   - Main app (5-tab bottom nav): Home, Transactions, Budgets, Wallets, More
  */
 @Composable
 fun HasbiNavHost(isOnboarded: Boolean) {
@@ -88,13 +89,13 @@ fun HasbiNavHost(isOnboarded: Boolean) {
         ) {
             // === Onboarding ===
             composable(Routes.ONBOARDING_WELCOME) {
-                PlaceholderScreen("Welcome — Hasbi mein khush amdeed!\n\n(Week 4)")
-            }
-            composable(Routes.ONBOARDING_WALLET) {
-                PlaceholderScreen("Wallet Setup — Apne wallets choose karein\n\n(Week 4)")
-            }
-            composable(Routes.ONBOARDING_BUDGET) {
-                PlaceholderScreen("Budget Setup — Apna budget set karein\n\n(Week 4)")
+                OnboardingNavHost(
+                    onComplete = {
+                        navController.navigate(Routes.DASHBOARD) {
+                            popUpTo(Routes.ONBOARDING_WELCOME) { inclusive = true }
+                        }
+                    }
+                )
             }
 
             // === Main app (bottom nav) ===
@@ -145,6 +146,6 @@ private fun PlaceholderScreen(text: String) {
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        Text(text = text, textAlign = androidx.compose.ui.text.style.TextAlign.Center)
+        Text(text = text, textAlign = TextAlign.Center)
     }
 }

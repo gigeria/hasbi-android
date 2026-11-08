@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Hasbi</string>
-    <string name="app_tagline">Mera Hisab, Mera Saathi</string>
+    <string name="app_tagline">Mera Hisab, Mera Yaqeen</string>
     <string name="app_arabic">حسبي</string>
 
     <!-- Onboarding -->
@@ -41,6 +41,6 @@
     <string name="action_back">Back</string>
 
     <!-- About -->
-    <string name="about_hasbi">Hasbi — Mera Hisab, Mera Saathi</string>
+    <string name="about_hasbi">Hasbi — Mera Hisab, Mera Yaqeen</string>
     <string name="about_version">Version 1.0.0</string>
 </resources>
