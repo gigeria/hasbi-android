@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Hasbi brand colors (also defined in HasbiColors.kt for Compose) -->
+    <color name="primary">#1B5E43</color>
+    <color name="primary_light">#2E7D5B</color>
+    <color name="primary_dark">#0F3F2C</color>
+    <color name="accent">#F4A340</color>
+    <color name="primary_gold">#C9A961</color>
+    <color name="income">#4CAF80</color>
+    <color name="expense">#E57373</color>
+    <color name="background">#F7F5EE</color>
+    <color name="surface">#FFFFFF</color>
+
+    <!-- Splash background -->
+    <color name="splash_background">#1B5E43</color>
+    <color name="splash_logo_background">#FFFFFF</color>
+</resources>

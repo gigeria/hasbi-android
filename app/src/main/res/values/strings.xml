@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Hasbi</string>
+    <string name="app_tagline">Mera Hisab, Mera Saathi</string>
+    <string name="app_arabic">حسبي</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_welcome_title">Assalam-o-Alaikum!\nHasbi mein khush amdeed</string>
+    <string name="onboarding_welcome_desc">Aaj kitna paisa kharch kar sakte hain, yeh Hasbi batayega — taake mahine ke end tak tension na ho.</string>
+    <string name="onboarding_welcome_cta">Let\'s Get Started</string>
+    <string name="onboarding_skip">Skip</string>
+
+    <!-- Trust badges -->
+    <string name="trust_no_account">No account needed</string>
+    <string name="trust_data_local">Data stays on your device</string>
+    <string name="trust_cloud_optional">Cloud backup optional</string>
+
+    <!-- Navigation -->
+    <string name="nav_home">Home</string>
+    <string name="nav_transactions">Transactions</string>
+    <string name="nav_budgets">Budgets</string>
+    <string name="nav_wallets">Wallets</string>
+    <string name="nav_more">More</string>
+
+    <!-- Dashboard -->
+    <string name="dashboard_total_balance">Total Balance</string>
+    <string name="dashboard_aaj_ka_baqi">Aaj Ka Baqi</string>
+    <string name="dashboard_recent_transactions">Recent Transactions</string>
+    <string name="dashboard_my_wallets">My Wallets</string>
+    <string name="dashboard_see_all">See all</string>
+    <string name="dashboard_no_budget">Apna budget set karein</string>
+    <string name="dashboard_first_transaction">Pehla kharch add karein</string>
+
+    <!-- Common -->
+    <string name="action_save">Save</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_delete">Delete</string>
+    <string name="action_restore">Restore</string>
+    <string name="action_edit">Edit</string>
+    <string name="action_continue">Continue</string>
+    <string name="action_back">Back</string>
+
+    <!-- About -->
+    <string name="about_hasbi">Hasbi — Mera Hisab, Mera Saathi</string>
+    <string name="about_version">Version 1.0.0</string>
+</resources>
