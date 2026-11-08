@@ -29,13 +29,13 @@ abstract class OnboardingDao {
     abstract suspend fun insertWallet(wallet: WalletEntity): Long
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    abstract suspend fun insertCategories(categories: List<CategoryEntity>): List<Long>
+    abstract suspend fun insertCategories(categories: List<CategoryEntity>): LongArray
 
     @Insert(onConflict = OnConflictStrategy.ABORT)
     abstract suspend fun insertCycle(cycle: BudgetCycleEntity): Long
 
     @Insert(onConflict = OnConflictStrategy.ABORT)
-    abstract suspend fun insertBudgets(budgets: List<BudgetEntity>): List<Long>
+    abstract suspend fun insertBudgets(budgets: List<BudgetEntity>): LongArray
 
     /**
      * Atomic onboarding completion.
