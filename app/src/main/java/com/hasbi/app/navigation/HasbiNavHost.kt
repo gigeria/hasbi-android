@@ -29,6 +29,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.hasbi.dashboard.DashboardScreen
 import com.hasbi.onboarding.OnboardingNavHost
+import com.hasbi.transactions.detail.TransactionDetailSheet
+import com.hasbi.transactions.list.TransactionsListScreen
 
 /**
  * Top-level navigation host.
@@ -103,7 +105,13 @@ fun HasbiNavHost(isOnboarded: Boolean) {
                 DashboardScreen()
             }
             composable(Routes.TRANSACTIONS) {
-                PlaceholderScreen("Transactions List\n\n(Week 6)")
+                TransactionsListScreen(
+                    onTransactionClick = { txId ->
+                        // Show detail sheet (handled by state in Week 7)
+                        // For now, no-op
+                    },
+                    onBackClick = { navController.popBackStack() }
+                )
             }
             composable(Routes.BUDGETS) {
                 PlaceholderScreen("Budgets — Cycle + Categories\n\n(Week 9)")
