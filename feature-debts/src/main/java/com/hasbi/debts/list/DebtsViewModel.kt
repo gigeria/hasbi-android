@@ -7,6 +7,7 @@ import com.hasbi.domain.repository.DebtRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -30,23 +31,17 @@ class DebtsViewModel @Inject constructor(
             initialValue = emptyList()
         )
 
-    val totalLent: StateFlow<Long> = lentDebts
-        .let { flow ->
-            kotlinx.coroutines.flow.combine(flow) { list ->
-                list.sumOf { it.remainingAmount }
-            }
-        }.stateIn(
+    val totalLent: StateFlow<Long> = debtRepository.observeLentWithRemaining()
+        .map { list -> list.sumOf { it.remainingAmount } }
+        .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
             initialValue = 0L
         )
 
-    val totalBorrowed: StateFlow<Long> = borrowedDebts
-        .let { flow ->
-            kotlinx.coroutines.flow.combine(flow) { list ->
-                list.sumOf { it.remainingAmount }
-            }
-        }.stateIn(
+    val totalBorrowed: StateFlow<Long> = debtRepository.observeBorrowedWithRemaining()
+        .map { list -> list.sumOf { it.remainingAmount } }
+        .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
             initialValue = 0L
