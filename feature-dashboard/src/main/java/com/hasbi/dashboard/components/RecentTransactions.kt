@@ -1,6 +1,8 @@
 package com.hasbi.dashboard.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -191,6 +193,3 @@ private fun EmptyTransactionsCard(colors: com.hasbi.design.theme.HasbiColorPalet
 @Composable
 private inline fun <T> remember(crossinline calculation: () -> T): T =
     androidx.compose.runtime.remember(calculation)
-
-private fun Modifier.clickable(onClick: () -> Unit): Modifier =
-    this.then(androidx.compose.foundation.clickable(onClick = onClick))

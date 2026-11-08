@@ -3,6 +3,7 @@ package com.hasbi.dashboard.components
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -275,8 +276,3 @@ private fun calculateProgress(baqi: DailySafeSpend): Float {
     return if (baqi.totalBudget <= 0) 0f
     else (baqi.cycleSpent.toFloat() / baqi.totalBudget.toFloat()).coerceIn(0f, 1f)
 }
-
-// Add click modifier
-private fun Modifier.clickable(
-    onClick: () -> Unit
-): Modifier = this.then(androidx.compose.foundation.clickable(onClick = onClick))

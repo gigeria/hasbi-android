@@ -46,8 +46,7 @@ fun WalletMiniRow(
         modifier = Modifier
             .fillMaxWidth()
             .horizontalScroll(rememberScrollState()),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        contentPadding = PaddingValues(horizontal = 0.dp)
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         wallets.forEach { walletWithBalance ->
             WalletMiniCard(
