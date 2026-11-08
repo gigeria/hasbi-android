@@ -38,6 +38,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.hasbi.budgets.BudgetsScreen
 import com.hasbi.dashboard.DashboardScreen
+import com.hasbi.debts.add.AddDebtScreen
+import com.hasbi.debts.list.DebtsScreen
 import com.hasbi.onboarding.OnboardingNavHost
 import com.hasbi.transactions.detail.TransactionDetailSheet
 import com.hasbi.transactions.list.TransactionsListScreen
@@ -169,7 +171,21 @@ fun HasbiNavHost(isOnboarded: Boolean) {
                 )
             }
             composable(Routes.MORE) {
-                PlaceholderScreen("More — Settings, Backup, About\n\n(Week 11)")
+                MoreMenuScreen(
+                    onDebtsClick = { navController.navigate("debts") }
+                )
+            }
+            composable("debts") {
+                DebtsScreen(
+                    onAddDebtClick = { navController.navigate("debt/add") },
+                    onDebtClick = { /* TODO: Debt detail */ }
+                )
+            }
+            composable("debt/add") {
+                AddDebtScreen(
+                    onBack = { navController.popBackStack() },
+                    onSaved = { navController.popBackStack() }
+                )
             }
         }
 
@@ -217,5 +233,106 @@ private fun PlaceholderScreen(text: String) {
         contentAlignment = Alignment.Center
     ) {
         Text(text = text, textAlign = TextAlign.Center)
+    }
+}
+
+@Composable
+private fun MoreMenuScreen(
+    onDebtsClick: () -> Unit
+) {
+    val colors = com.hasbi.design.theme.HasbiTheme.colors
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(colors.background)
+            .padding(horizontal = 20.dp, vertical = 16.dp)
+    ) {
+        Text(
+            text = "More",
+            color = colors.textPrimary,
+            fontSize = 22.sp,
+            fontWeight = FontWeight.Bold
+        )
+        Spacer(modifier = Modifier.height(20.dp))
+
+        // Menu items
+        MoreMenuItem(
+            icon = "🤝",
+            title = "Debt / Udhaar",
+            subtitle = "Lent & borrowed records",
+            onClick = onDebtsClick,
+            colors = colors
+        )
+        MoreMenuItem(
+            icon = "📊",
+            title = "Reports",
+            subtitle = "Spending insights (Coming soon)",
+            onClick = { },
+            colors = colors
+        )
+        MoreMenuItem(
+            icon = "💾",
+            title = "Backup & Restore",
+            subtitle = "Encrypted local backup (Coming soon)",
+            onClick = { },
+            colors = colors
+        )
+        MoreMenuItem(
+            icon = "🔒",
+            title = "Security",
+            subtitle = "Biometric lock (Coming soon)",
+            onClick = { },
+            colors = colors
+        )
+        MoreMenuItem(
+            icon = "ℹ️",
+            title = "About Hasbi",
+            subtitle = "Mera Hisab, Mera Yaqeen",
+            onClick = { },
+            colors = colors
+        )
+    }
+}
+
+@Composable
+private fun MoreMenuItem(
+    icon: String,
+    title: String,
+    subtitle: String,
+    onClick: () -> Unit,
+    colors: com.hasbi.design.theme.HasbiColorPalette
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(14.dp))
+            .background(colors.surface)
+            .clickable(onClick = onClick)
+            .padding(14.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Box(
+            modifier = Modifier
+                .size(40.dp)
+                .clip(RoundedCornerShape(12.dp))
+                .background(colors.backgroundWarm),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(text = icon, fontSize = 18.sp)
+        }
+        Spacer(modifier = Modifier.width(12.dp))
+        Column {
+            Text(
+                text = title,
+                color = colors.textPrimary,
+                fontSize = 14.sp,
+                fontWeight = FontWeight.SemiBold
+            )
+            Text(
+                text = subtitle,
+                color = colors.textSecondary,
+                fontSize = 11.sp
+            )
+        }
     }
 }
