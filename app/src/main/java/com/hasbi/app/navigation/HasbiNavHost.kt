@@ -208,6 +208,11 @@ fun HasbiNavHost(isOnboarded: Boolean) {
                     onBackupClick = { navController.navigate("backup") }
                 )
             }
+            composable("about") {
+                com.hasbi.settings.AboutScreen(
+                    onBack = { navController.popBackStack() }
+                )
+            }
             composable("backup") {
                 com.hasbi.backup.BackupScreen(
                     onBack = { navController.popBackStack() }
