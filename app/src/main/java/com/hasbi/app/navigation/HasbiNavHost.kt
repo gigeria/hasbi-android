@@ -184,7 +184,9 @@ fun HasbiNavHost(isOnboarded: Boolean) {
             }
             composable(Routes.MORE) {
                 MoreMenuScreen(
-                    onDebtsClick = { navController.navigate("debts") }
+                    onDebtsClick = { navController.navigate("debts") },
+                    onSettingsClick = { navController.navigate("settings") },
+                    onBackupClick = { navController.navigate("backup") }
                 )
             }
             composable("debts") {
@@ -197,6 +199,18 @@ fun HasbiNavHost(isOnboarded: Boolean) {
                 AddDebtScreen(
                     onBack = { navController.popBackStack() },
                     onSaved = { navController.popBackStack() }
+                )
+            }
+            composable("settings") {
+                com.hasbi.settings.SettingsScreen(
+                    onBack = { navController.popBackStack() },
+                    onCategoriesClick = { /* TODO: Categories screen */ },
+                    onBackupClick = { navController.navigate("backup") }
+                )
+            }
+            composable("backup") {
+                com.hasbi.backup.BackupScreen(
+                    onBack = { navController.popBackStack() }
                 )
             }
         }
@@ -250,7 +264,9 @@ private fun PlaceholderScreen(text: String) {
 
 @Composable
 private fun MoreMenuScreen(
-    onDebtsClick: () -> Unit
+    onDebtsClick: () -> Unit,
+    onSettingsClick: () -> Unit = {},
+    onBackupClick: () -> Unit = {}
 ) {
     val colors = com.hasbi.design.theme.HasbiTheme.colors
     Column(
@@ -276,17 +292,17 @@ private fun MoreMenuScreen(
             colors = colors
         )
         MoreMenuItem(
-            icon = "📊",
-            title = "Reports",
-            subtitle = "Spending insights (Coming soon)",
-            onClick = { },
+            icon = "⚙️",
+            title = "Settings",
+            subtitle = "Theme, language, security",
+            onClick = onSettingsClick,
             colors = colors
         )
         MoreMenuItem(
             icon = "💾",
             title = "Backup & Restore",
-            subtitle = "Encrypted local backup (Coming soon)",
-            onClick = { },
+            subtitle = "Encrypted local backup",
+            onClick = onBackupClick,
             colors = colors
         )
         MoreMenuItem(

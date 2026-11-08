@@ -32,6 +32,8 @@ dependencies {
     implementation(project(":core:core-design"))
     implementation(project(":core:core-domain"))
     implementation(project(":core:core-data"))
+    implementation(project(":core:core-database"))
+    implementation(project(":core:core-datastore"))
     implementation(project(":core:core-util"))
 
     // Compose
@@ -42,6 +44,7 @@ dependencies {
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.material.icons.extended)
     implementation(libs.androidx.compose.foundation)
+    implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.animation)
     debugImplementation(libs.androidx.compose.ui.tooling)
 
