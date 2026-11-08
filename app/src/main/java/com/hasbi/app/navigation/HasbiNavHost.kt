@@ -31,6 +31,7 @@ import com.hasbi.dashboard.DashboardScreen
 import com.hasbi.onboarding.OnboardingNavHost
 import com.hasbi.transactions.detail.TransactionDetailSheet
 import com.hasbi.transactions.list.TransactionsListScreen
+import com.hasbi.transactions.quickadd.QuickAddSheet
 
 /**
  * Top-level navigation host.
@@ -50,6 +51,10 @@ fun HasbiNavHost(isOnboarded: Boolean) {
     val currentRoute = currentDestination?.route
 
     val showBottomBar = currentRoute in mainRoutes
+    val showFab = currentRoute in fabRoutes
+
+    // Quick Add sheet state
+    var showQuickAdd by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
 
     Scaffold(
         bottomBar = {
@@ -82,6 +87,21 @@ fun HasbiNavHost(isOnboarded: Boolean) {
                     }
                 }
             }
+        },
+        floatingActionButton = {
+            if (showFab) {
+                androidx.compose.material3.FloatingActionButton(
+                    onClick = { showQuickAdd = true },
+                    containerColor = androidx.compose.material3.MaterialTheme.colorScheme.primary,
+                    contentColor = androidx.compose.ui.graphics.Color.White,
+                    shape = androidx.compose.foundation.shape.RoundedCornerShape(18.dp)
+                ) {
+                    androidx.compose.material3.Icon(
+                        imageVector = androidx.compose.material.icons.Icons.Filled.Add,
+                        contentDescription = "Quick Add"
+                    )
+                }
+            }
         }
     ) { innerPadding ->
         NavHost(
@@ -102,7 +122,10 @@ fun HasbiNavHost(isOnboarded: Boolean) {
 
             // === Main app (bottom nav) ===
             composable(Routes.DASHBOARD) {
-                DashboardScreen()
+                DashboardScreen(
+                    onQuickAddClick = { showQuickAdd = true },
+                    onSeeAllTransactions = { navController.navigate(Routes.TRANSACTIONS) }
+                )
             }
             composable(Routes.TRANSACTIONS) {
                 TransactionsListScreen(
@@ -123,6 +146,13 @@ fun HasbiNavHost(isOnboarded: Boolean) {
                 PlaceholderScreen("More — Settings, Backup, About\n\n(Week 11)")
             }
         }
+
+        // Quick Add bottom sheet
+        if (showQuickAdd) {
+            QuickAddSheet(
+                onDismiss = { showQuickAdd = false }
+            )
+        }
     }
 }
 
@@ -132,6 +162,12 @@ private val mainRoutes = setOf(
     Routes.BUDGETS,
     Routes.WALLETS,
     Routes.MORE
+)
+
+private val fabRoutes = setOf(
+    Routes.DASHBOARD,
+    Routes.TRANSACTIONS,
+    Routes.WALLETS
 )
 
 private data class BottomNavItem(
