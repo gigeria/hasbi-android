@@ -258,7 +258,7 @@ private fun TransactionDetailContent(
                 colors = colors
             )
             if (transaction.note != null) {
-                val noteValue = transaction.note
+                val noteValue = transaction.note!!
                 DetailRow(
                     label = "Note",
                     value = noteValue,
