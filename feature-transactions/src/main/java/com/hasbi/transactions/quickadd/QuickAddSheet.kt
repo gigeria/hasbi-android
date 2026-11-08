@@ -359,20 +359,22 @@ private fun SmartEntryHint(
         // Show parsed result if confidence > 0
         if (result != null && result.confidence > 0) {
             Spacer(modifier = Modifier.height(6.dp))
+            val resCategory = result.category
+            val resWallet = result.wallet
             Text(
                 text = buildString {
                     if (result.amount > 0) append("Rs. ${result.amount / 100}")
-                    if (result.category != null) {
+                    if (resCategory != null) {
                         if (isNotEmpty()) append(" · ")
-                        append(result.category.icon)
+                        append(resCategory.icon)
                         append(" ")
-                        append(result.category.name)
+                        append(resCategory.name)
                     }
-                    if (result.wallet != null) {
+                    if (resWallet != null) {
                         if (isNotEmpty()) append(" · ")
-                        append(result.wallet.icon)
+                        append(resWallet.icon)
                         append(" ")
-                        append(result.wallet.name)
+                        append(resWallet.name)
                     }
                     if (isNotEmpty()) {
                         append(" (${(result.confidence * 100).toInt()}% sure)")
