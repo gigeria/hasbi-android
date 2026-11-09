@@ -358,13 +358,9 @@ private fun MoreMenuScreen(
         )
         MoreMenuItem(
             icon = "🔒",
-        MoreMenuItem(
-            icon = "🔒",
             title = "App Lock (Tala)",
             subtitle = "PIN lock for app security",
             onClick = onLockClick,
-            colors = colors
-        )
             colors = colors
         )
         MoreMenuItem(
