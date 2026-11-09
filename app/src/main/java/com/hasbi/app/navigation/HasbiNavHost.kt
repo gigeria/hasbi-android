@@ -227,10 +227,6 @@ fun HasbiNavHost(isOnboarded: Boolean) {
                     onBack = { navController.popBackStack() }
                 )
             }
-                com.hasbi.settings.categories.CategoriesScreen(
-                    onBack = { navController.popBackStack() }
-                )
-            }
             composable("about") {
                 com.hasbi.settings.AboutScreen(
                     onBack = { navController.popBackStack() }
