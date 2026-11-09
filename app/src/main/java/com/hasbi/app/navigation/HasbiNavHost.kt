@@ -194,7 +194,6 @@ fun HasbiNavHost(isOnboarded: Boolean) {
                     onReportsClick = { navController.navigate("reports") },
                     onExportClick = { navController.navigate("export") },
                     onProjectsClick = { navController.navigate("projects") },
-                    onLockClick = { navController.navigate("app-lock") }
                 )
             }
             composable("debts") {
@@ -214,7 +213,6 @@ fun HasbiNavHost(isOnboarded: Boolean) {
                     onBack = { navController.popBackStack() },
                     onCategoriesClick = { navController.navigate("categories") },
                     onProjectsClick = { navController.navigate("projects") },
-                    onLockClick = { navController.navigate("app-lock") }
                     onBackupClick = { navController.navigate("backup") },
                     onAboutClick = { navController.navigate("about") }
                 )
