@@ -60,7 +60,7 @@ class CategoriesViewModel @Inject constructor(
                 colorHex = colorHex,
                 group = group,
                 sortOrder = 99,
-                keywords = name.lowercase(),
+                keywords = listOf(name.lowercase()),
                 createdAt = now,
                 updatedAt = now
             )
