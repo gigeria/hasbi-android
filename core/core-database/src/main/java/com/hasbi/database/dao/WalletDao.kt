@@ -131,25 +131,12 @@ interface WalletDao {
 
     @Query("SELECT COUNT(*) FROM transactions WHERE walletId = :id AND isDeleted = 0")
     suspend fun getTransactionCount(id: Long): Int
-}
 
     /**
      * FIX WALLET-001: Credit card outstanding liability.
-     *
-     * For credit cards:
-     * - Outstanding = SUM(expenses on this card) - SUM(payments to this card)
-     * - Available credit = creditLimit - outstanding
-     *
-     * Returns negative balance (liability) for credit cards.
      */
     @Query("""
         SELECT
-            w.id AS id,
-            w.name AS name,
-            w.icon AS icon,
-            w.colorHex AS colorHex,
-            w.type AS type,
-            w.currencyCode AS currencyCode,
             w.initialBalance
             - COALESCE((SELECT SUM(amount) FROM transactions
                        WHERE walletId = w.id AND type = 'EXPENSE' AND isDeleted = 0), 0)
@@ -159,8 +146,8 @@ interface WalletDao {
                        WHERE toWalletId = w.id AND type = 'TRANSFER' AND isDeleted = 0), 0)
             - COALESCE((SELECT SUM(amount) FROM transactions
                        WHERE walletId = w.id AND type = 'TRANSFER' AND isDeleted = 0), 0)
-            AS balance
         FROM wallets w
         WHERE w.id = :walletId AND w.type = 'CREDIT_CARD'
     """)
     fun observeCreditCardBalance(walletId: Long): Flow<Long>
+}
