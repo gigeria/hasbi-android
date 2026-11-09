@@ -190,6 +190,7 @@ fun HasbiNavHost(isOnboarded: Boolean) {
                     onSettingsClick = { navController.navigate("settings") },
                     onBackupClick = { navController.navigate("backup") },
                     onAboutClick = { navController.navigate("about") },
+                    onReportsClick = { navController.navigate("reports") },
                     onExportClick = { navController.navigate("export") },
                     onProjectsClick = { navController.navigate("projects") }
                 )
@@ -296,7 +297,8 @@ private fun MoreMenuScreen(
     onBackupClick: () -> Unit = {},
     onAboutClick: () -> Unit = {},
     onExportClick: () -> Unit = {},
-    onProjectsClick: () -> Unit = {}
+    onProjectsClick: () -> Unit = {},
+    onReportsClick: () -> Unit = {}
 ) {
     val colors = com.hasbi.design.theme.HasbiTheme.colors
     Column(
