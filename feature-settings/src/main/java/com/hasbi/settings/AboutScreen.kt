@@ -18,6 +18,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import android.content.Intent
+import android.net.Uri
+import androidx.compose.ui.platform.LocalContext
 import com.hasbi.design.icons.HasbiArchLogo
 import com.hasbi.design.theme.HasbiTheme
 
@@ -189,9 +192,26 @@ fun AboutScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
+            // Visit Website button
+            val context = LocalContext.current
+            OutlinedButton(
+                onClick = {
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://digitalkasur.com"))
+                    context.startActivity(intent)
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp),
+                shape = RoundedCornerShape(14.dp)
+            ) {
+                Text("🌐 Visit digitalkasur.com", fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
             // Footer
             Text(
-                text = "Made with ❤️ in Pakistan\nHasbi — Aap ke liye, Haseeb ke liye, sab ke liye.",
+                text = "App by Ahmad Bin Shafi\nDigital Kasur — digitalkasur.com\n\nMade with ❤️ in Pakistan\nHasbi — Aap ke liye, Haseeb ke liye, sab ke liye.",
                 color = colors.textTertiary,
                 fontSize = 11.sp,
                 textAlign = TextAlign.Center,

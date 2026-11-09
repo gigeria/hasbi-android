@@ -90,7 +90,7 @@ class SettingsDataStore @Inject constructor(
             isOnboarded = prefs[Keys.ONBOARDED] ?: false,
             onboardingVersion = prefs[Keys.ONBOARDING_VERSION] ?: 0,
             baseCurrency = prefs[Keys.BASE_CURRENCY] ?: "PKR",
-            language = AppLanguage.valueOf(prefs[Keys.LANGUAGE] ?: AppLanguage.ROMAN_URDU.name),
+            language = AppLanguage.valueOf(prefs[Keys.LANGUAGE] ?: AppLanguage.ENGLISH.name),
             cycleType = CycleType.valueOf(prefs[Keys.CYCLE_TYPE] ?: CycleType.MONTHLY.name),
             cycleStartDate = prefs[Keys.CYCLE_START_DATE] ?: 1,
             themeMode = ThemeMode.valueOf(prefs[Keys.THEME_MODE] ?: ThemeMode.SYSTEM.name),

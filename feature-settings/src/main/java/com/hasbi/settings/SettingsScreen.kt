@@ -30,6 +30,7 @@ fun SettingsScreen(
     onBack: () -> Unit,
     onCategoriesClick: () -> Unit,
     onBackupClick: () -> Unit,
+    onAboutClick: () -> Unit = {},
     viewModel: SettingsViewModel = hiltViewModel()
 ) {
     val settings by viewModel.settings.collectAsState()
@@ -188,7 +189,7 @@ fun SettingsScreen(
                 icon = "ℹ️",
                 title = "About Hasbi",
                 value = "v1.0.0",
-                onClick = { },
+                onClick = onAboutClick,
                 colors = colors
             )
             SettingsRow(

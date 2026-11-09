@@ -65,6 +65,7 @@ fun DashboardScreen(
     onQuickAddClick: () -> Unit = {},
     onSeeAllTransactions: () -> Unit = {},
     onSetBudgetClick: () -> Unit = {},
+    onSettingsClick: () -> Unit = {},
     viewModel: DashboardViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -107,7 +108,8 @@ fun DashboardScreen(
                     onToggleBalance = viewModel::toggleBalanceVisibility,
                     onQuickAddClick = onQuickAddClick,
                     onSeeAllTransactions = onSeeAllTransactions,
-                    onSetBudgetClick = onSetBudgetClick
+                    onSetBudgetClick = onSetBudgetClick,
+                    onSettingsClick = onSettingsClick
                 )
             }
         }
@@ -123,7 +125,8 @@ private fun DashboardContent(
     onToggleBalance: () -> Unit,
     onQuickAddClick: () -> Unit,
     onSeeAllTransactions: () -> Unit,
-    onSetBudgetClick: () -> Unit
+    onSetBudgetClick: () -> Unit,
+    onSettingsClick: () -> Unit = {}
 ) {
     Box(
         modifier = Modifier
@@ -164,7 +167,7 @@ private fun DashboardContent(
                     }
                 }
 
-                IconButton(onClick = { /* Settings — Week 11 */ }) {
+                IconButton(onClick = onSettingsClick) {
                     Icon(
                         imageVector = Icons.Filled.Settings,
                         contentDescription = "Settings",

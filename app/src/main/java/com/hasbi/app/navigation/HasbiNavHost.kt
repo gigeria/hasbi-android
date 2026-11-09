@@ -150,7 +150,9 @@ fun HasbiNavHost(isOnboarded: Boolean) {
             composable(Routes.DASHBOARD) {
                 DashboardScreen(
                     onQuickAddClick = { showQuickAdd = true },
-                    onSeeAllTransactions = { navController.navigate(Routes.TRANSACTIONS) }
+                    onSeeAllTransactions = { navController.navigate(Routes.TRANSACTIONS) },
+                    onSetBudgetClick = { navController.navigate(Routes.BUDGETS) },
+                    onSettingsClick = { navController.navigate("settings") }
                 )
             }
             composable(Routes.TRANSACTIONS) {
@@ -186,7 +188,8 @@ fun HasbiNavHost(isOnboarded: Boolean) {
                 MoreMenuScreen(
                     onDebtsClick = { navController.navigate("debts") },
                     onSettingsClick = { navController.navigate("settings") },
-                    onBackupClick = { navController.navigate("backup") }
+                    onBackupClick = { navController.navigate("backup") },
+                    onAboutClick = { navController.navigate("about") }
                 )
             }
             composable("debts") {
@@ -205,7 +208,8 @@ fun HasbiNavHost(isOnboarded: Boolean) {
                 com.hasbi.settings.SettingsScreen(
                     onBack = { navController.popBackStack() },
                     onCategoriesClick = { /* TODO: Categories screen */ },
-                    onBackupClick = { navController.navigate("backup") }
+                    onBackupClick = { navController.navigate("backup") },
+                    onAboutClick = { navController.navigate("about") }
                 )
             }
             composable("about") {
@@ -271,7 +275,8 @@ private fun PlaceholderScreen(text: String) {
 private fun MoreMenuScreen(
     onDebtsClick: () -> Unit,
     onSettingsClick: () -> Unit = {},
-    onBackupClick: () -> Unit = {}
+    onBackupClick: () -> Unit = {},
+    onAboutClick: () -> Unit = {}
 ) {
     val colors = com.hasbi.design.theme.HasbiTheme.colors
     Column(
@@ -321,7 +326,7 @@ private fun MoreMenuScreen(
             icon = "ℹ️",
             title = "About Hasbi",
             subtitle = "Mera Hisab, Mera Yaqeen",
-            onClick = { },
+            onClick = onAboutClick,
             colors = colors
         )
     }

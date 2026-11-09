@@ -55,7 +55,7 @@ data class AppSettings(
     val isOnboarded: Boolean = false,
     val onboardingVersion: Int = 0,
     val baseCurrency: String = "PKR",
-    val language: AppLanguage = AppLanguage.ROMAN_URDU,
+    val language: AppLanguage = AppLanguage.ENGLISH,
     val cycleType: CycleType = CycleType.MONTHLY,
     val cycleStartDate: Int = 1,
     val themeMode: ThemeMode = ThemeMode.SYSTEM,
