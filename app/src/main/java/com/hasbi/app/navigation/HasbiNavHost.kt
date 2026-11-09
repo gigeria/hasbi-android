@@ -249,6 +249,24 @@ fun HasbiNavHost(isOnboarded: Boolean) {
                     onSaved = { navController.popBackStack() }
                 )
             }
+            composable("budget/add") {
+                com.hasbi.budgets.add.AddBudgetScreen(
+                    onBack = { navController.popBackStack() },
+                    onSaved = { navController.popBackStack() }
+                )
+            }
+            composable("reports") {
+                com.hasbi.settings.ReportsScreen(
+                    onBack = { navController.popBackStack() },
+                    onExportClick = { navController.navigate("export") }
+                )
+            }
+            composable("app-lock") {
+                com.hasbi.settings.lock.AppLockScreen(
+                    onBack = { navController.popBackStack() },
+                    onSaved = { navController.popBackStack() }
+                )
+            }
             composable("export") {
                 com.hasbi.transactions.export.ExportScreen(
                     onBack = { navController.popBackStack() }
