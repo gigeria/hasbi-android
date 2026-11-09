@@ -144,6 +144,15 @@ class QuickAddViewModel @Inject constructor(
         _state.update { it.copy(note = note) }
     }
 
+    // === Date ===
+    fun setDate(date: Long) {
+        _state.update { it.copy(date = date) }
+    }
+
+    fun setPhoto(uri: String?) {
+        _state.update { it.copy(attachmentPath = uri) }
+    }
+
     // === Save ===
     fun save(onComplete: (Boolean) -> Unit) {
         val current = _state.value
@@ -180,8 +189,9 @@ class QuickAddViewModel @Inject constructor(
                 walletId = walletId,
                 categoryId = if (current.type == TransactionType.TRANSFER) null else current.selectedCategoryId,
                 toWalletId = if (current.type == TransactionType.TRANSFER) current.toWalletId else null,
-                date = now,
+                date = current.date,
                 note = current.note.ifBlank { null },
+                attachmentPath = current.attachmentPath,
                 originalText = current.smartEntryText.ifBlank { null },
                 createdAt = now,
                 updatedAt = now
@@ -218,7 +228,9 @@ data class QuickAddState(
     val selectedCategoryId: Long? = null,
     val selectedWalletId: Long? = null,
     val toWalletId: Long? = null,
+    val date: Long = System.currentTimeMillis(),
     val note: String = "",
+    val attachmentPath: String? = null,
     val smartEntryText: String = "",
     val smartEntryResult: SmartEntryResult? = null,
     val isSaving: Boolean = false,

@@ -26,6 +26,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -92,6 +95,8 @@ fun QuickAddSheet(
             onCategorySelect = viewModel::selectCategory,
             onWalletSelect = viewModel::selectWallet,
             onNoteChange = viewModel::setNote,
+            onDateChange = viewModel::setDate,
+            onPhotoChange = viewModel::setPhoto,
             onSave = {
                 viewModel.save { success ->
                     if (success) {
@@ -117,6 +122,8 @@ private fun QuickAddContent(
     onCategorySelect: (Category) -> Unit,
     onWalletSelect: (Wallet) -> Unit,
     onNoteChange: (String) -> Unit,
+    onDateChange: (Long) -> Unit,
+    onPhotoChange: (String?) -> Unit,
     onSave: () -> Unit,
     colors: com.hasbi.design.theme.HasbiColorPalette
 ) {
@@ -196,6 +203,30 @@ private fun QuickAddContent(
             selectedWalletId = state.selectedWalletId,
             onSelect = onWalletSelect,
             colors = colors
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Date selector (FEAT-005: Date picker)
+        Text(
+            text = "Date",
+            color = colors.textSecondary,
+            fontSize = 12.sp,
+            fontWeight = FontWeight.SemiBold
+        )
+        Spacer(modifier = Modifier.height(6.dp))
+        DatePickerField(
+            selectedDate = state.date,
+            onDateSelected = onDateChange,
+            colors = colors
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Receipt photo (FEAT-004: Receipt photo integration)
+        ReceiptPhotoPicker(
+            photoUri = state.attachmentPath,
+            onPhotoSelected = onPhotoChange
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -486,6 +517,67 @@ private fun WalletSelectorRow(
                     )
                 }
             }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun DatePickerField(
+    selectedDate: Long,
+    onDateSelected: (Long) -> Unit,
+    colors: com.hasbi.design.theme.HasbiColorPalette
+) {
+    var showPicker by remember { androidx.compose.runtime.mutableStateOf(false) }
+    val dateFormat = remember { java.text.SimpleDateFormat("dd MMM yyyy", java.util.Locale.getDefault()) }
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(12.dp))
+            .background(colors.backgroundWarm)
+            .clickable { showPicker = true }
+            .padding(horizontal = 16.dp, vertical = 14.dp)
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Text(text = "📅", fontSize = 16.sp)
+            Text(
+                text = dateFormat.format(java.util.Date(selectedDate)),
+                color = colors.textPrimary,
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Medium
+            )
+        }
+    }
+
+    if (showPicker) {
+        val datePickerState = rememberDatePickerState(
+            initialSelectedDateMillis = selectedDate
+        )
+        DatePickerDialog(
+            onDismissRequest = { showPicker = false },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        datePickerState.selectedDateMillis?.let { onDateSelected(it) }
+                        showPicker = false
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = colors.primary,
+                        contentColor = androidx.compose.ui.graphics.Color.White
+                    )
+                ) { Text("OK") }
+            },
+            dismissButton = {
+                TextButton(onClick = { showPicker = false }) {
+                    Text("Cancel", color = colors.textSecondary)
+                }
+            }
+        ) {
+            DatePicker(state = datePickerState)
         }
     }
 }

@@ -29,34 +29,36 @@ class DebtRepositoryImpl @Inject constructor(
     override fun observeBorrowedWithRemaining(): Flow<List<DebtWithRemaining>> =
         debtDao.observeBorrowedWithRemaining()
 
-    override fun observeAll(): Flow<List<DebtEntity>> =
-        debtDao.observeAll()
+    override fun observeAll(): Flow<List<DebtEntity>> = debtDao.observeAll()
 
-    override fun observeById(id: Long): Flow<DebtEntity?> =
-        debtDao.observeById(id)
+    override fun observeById(id: Long): Flow<DebtEntity?> = debtDao.observeById(id)
 
     override fun observeByIdWithRemaining(id: Long): Flow<DebtWithRemaining?> =
         debtDao.observeByIdWithRemaining(id)
 
     override fun observePayments(debtId: Long): Flow<List<Transaction>> =
-        debtDao.let { transactionDao.observeDebtPayments(debtId).map { list -> list.map { it.toDomain() } } }
+        transactionDao.observeDebtPayments(debtId).map { list -> list.map { it.toDomain() } }
 
-    override suspend fun getById(id: Long): DebtEntity? =
-        debtDao.getById(id)
+    override suspend fun getById(id: Long): DebtEntity? = debtDao.getById(id)
 
+    /**
+     * FIX DEBT-001: Atomic debt creation.
+     *
+     * Uses @Transaction method — both debt + linked transaction
+     * insert atomically. No orphaned records possible.
+     */
     override suspend fun create(debt: DebtEntity, fromWalletId: Long): Result<Long> = try {
         require(debt.originalAmount > 0) { "Amount must be positive" }
 
         val now = System.currentTimeMillis()
-        val debtId = debtDao.insert(debt.copy(createdAt = now, updatedAt = now))
+        val debtToInsert = debt.copy(createdAt = now, updatedAt = now)
 
-        // Create linked transaction
         val txType = when (debt.type) {
-            DebtType.LENT -> TransactionType.DEBT_GIVEN        // money leaves wallet
-            DebtType.BORROWED -> TransactionType.DEBT_RECEIVED  // money enters wallet
+            DebtType.LENT -> TransactionType.DEBT_GIVEN
+            DebtType.BORROWED -> TransactionType.DEBT_RECEIVED
         }
 
-        val tx = TransactionEntity(
+        val transaction = TransactionEntity(
             type = txType,
             amount = debt.originalAmount,
             walletId = fromWalletId,
@@ -64,17 +66,23 @@ class DebtRepositoryImpl @Inject constructor(
             toWalletId = null,
             date = debt.startDate,
             note = "Udhaar: ${debt.personName}",
-            linkedDebtId = debtId,
+            linkedDebtId = 0, // will be set by DAO
             createdAt = now,
             updatedAt = now
         )
-        transactionDao.insert(tx)
 
+        // ATOMIC: both inserts in single @Transaction
+        val debtId = debtDao.createDebtWithTransaction(debtToInsert, transaction)
         Result.Success(debtId)
     } catch (e: Exception) {
         Result.Failure(HasbiError.DatabaseError(e.message ?: "Create debt failed"))
     }
 
+    /**
+     * FIX DEBT-002: Atomic payment recording with auto-settlement.
+     *
+     * Uses @Transaction method — inserts payment + auto-settles if remaining = 0.
+     */
     override suspend fun recordPayment(
         debtId: Long,
         amount: Long,
@@ -89,11 +97,11 @@ class DebtRepositoryImpl @Inject constructor(
 
         val now = System.currentTimeMillis()
         val txType = when (debt.type) {
-            DebtType.LENT -> TransactionType.DEBT_REPAYMENT_IN      // money enters wallet (repayment received)
-            DebtType.BORROWED -> TransactionType.DEBT_REPAYMENT_OUT  // money leaves wallet (repayment given)
+            DebtType.LENT -> TransactionType.DEBT_REPAYMENT_IN
+            DebtType.BORROWED -> TransactionType.DEBT_REPAYMENT_OUT
         }
 
-        val tx = TransactionEntity(
+        val transaction = TransactionEntity(
             type = txType,
             amount = amount,
             walletId = walletId,
@@ -105,9 +113,9 @@ class DebtRepositoryImpl @Inject constructor(
             createdAt = now,
             updatedAt = now
         )
-        val txId = transactionDao.insert(tx)
 
-        // Auto-settle if fully repaid (async check would be ideal, but ok for now)
+        // ATOMIC: payment + auto-settle check
+        val txId = debtDao.recordPaymentWithSettlement(transaction, debtId, debt.type)
         Result.Success(txId)
     } catch (e: Exception) {
         Result.Failure(HasbiError.DatabaseError(e.message ?: "Record payment failed"))
