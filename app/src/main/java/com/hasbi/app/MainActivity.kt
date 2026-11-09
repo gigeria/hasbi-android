@@ -4,12 +4,14 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import com.hasbi.app.navigation.HasbiNavHost
 import com.hasbi.design.theme.HasbiTheme
+import com.hasbi.domain.repository.AppSettings
 import com.hasbi.domain.repository.SettingsRepository
 import com.hasbi.domain.repository.ThemeMode
 import dagger.hilt.android.AndroidEntryPoint
@@ -28,23 +30,29 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        var isOnboarded: Boolean? = null
-        var themeMode: ThemeMode = ThemeMode.SYSTEM
-        splashScreen.setKeepOnScreenCondition { isOnboarded == null }
+        var isReady = false
+        var initialOnboarded = false
+        var initialTheme = ThemeMode.SYSTEM
+        splashScreen.setKeepOnScreenCondition { !isReady }
 
         lifecycleScope.launch {
             val settings = settingsRepository.settings.first()
-            isOnboarded = settings.isOnboarded
-            themeMode = settings.themeMode
+            initialOnboarded = settings.isOnboarded
+            initialTheme = settings.themeMode
+            isReady = true
 
             setContent {
-                val darkTheme = when (themeMode) {
+                // Observe settings continuously — theme changes apply immediately
+                val settingsState by settingsRepository.settings.collectAsState(initial = settings)
+                
+                val darkTheme = when (settingsState.themeMode) {
                     ThemeMode.LIGHT -> false
                     ThemeMode.DARK -> true
                     ThemeMode.SYSTEM -> androidx.compose.foundation.isSystemInDarkTheme()
                 }
+
                 HasbiTheme(darkTheme = darkTheme) {
-                    HasbiNavHost(isOnboarded = isOnboarded ?: false)
+                    HasbiNavHost(isOnboarded = settingsState.isOnboarded)
                 }
             }
         }

@@ -167,7 +167,7 @@ fun HasbiNavHost(isOnboarded: Boolean) {
             }
             composable(Routes.BUDGETS) {
                 BudgetsScreen(
-                    onAddBudgetClick = { /* TODO: Add budget screen */ }
+                    onAddBudgetClick = { navController.navigate("budget/add") }
                 )
             }
             composable(Routes.WALLETS) {
@@ -193,7 +193,8 @@ fun HasbiNavHost(isOnboarded: Boolean) {
                     onAboutClick = { navController.navigate("about") },
                     onReportsClick = { navController.navigate("reports") },
                     onExportClick = { navController.navigate("export") },
-                    onProjectsClick = { navController.navigate("projects") }
+                    onProjectsClick = { navController.navigate("projects") },
+                    onLockClick = { navController.navigate("app-lock") }
                 )
             }
             composable("debts") {
@@ -213,6 +214,7 @@ fun HasbiNavHost(isOnboarded: Boolean) {
                     onBack = { navController.popBackStack() },
                     onCategoriesClick = { navController.navigate("categories") },
                     onProjectsClick = { navController.navigate("projects") },
+                    onLockClick = { navController.navigate("app-lock") },
                     onBackupClick = { navController.navigate("backup") },
                     onAboutClick = { navController.navigate("about") }
                 )
@@ -307,6 +309,7 @@ private fun MoreMenuScreen(
     onAboutClick: () -> Unit = {},
     onExportClick: () -> Unit = {},
     onProjectsClick: () -> Unit = {},
+    onLockClick: () -> Unit = {},
     onReportsClick: () -> Unit = {}
 ) {
     val colors = com.hasbi.design.theme.HasbiTheme.colors
@@ -355,9 +358,13 @@ private fun MoreMenuScreen(
         )
         MoreMenuItem(
             icon = "🔒",
-            title = "Security",
-            subtitle = "Biometric lock (Coming soon)",
-            onClick = { },
+        MoreMenuItem(
+            icon = "🔒",
+            title = "App Lock (Tala)",
+            subtitle = "PIN lock for app security",
+            onClick = onLockClick,
+            colors = colors
+        )
             colors = colors
         )
         MoreMenuItem(
