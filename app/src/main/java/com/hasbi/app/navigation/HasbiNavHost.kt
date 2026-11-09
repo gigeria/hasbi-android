@@ -214,12 +214,16 @@ fun HasbiNavHost(isOnboarded: Boolean) {
                     onBack = { navController.popBackStack() },
                     onCategoriesClick = { navController.navigate("categories") },
                     onProjectsClick = { navController.navigate("projects") },
-                    onLockClick = { navController.navigate("app-lock") },
+                    onLockClick = { navController.navigate("app-lock") }
                     onBackupClick = { navController.navigate("backup") },
                     onAboutClick = { navController.navigate("about") }
                 )
             }
             composable("categories") {
+                com.hasbi.settings.categories.CategoriesScreen(
+                    onBack = { navController.popBackStack() }
+                )
+            }
             composable("projects") {
                 com.hasbi.settings.projects.ProjectsScreen(
                     onBack = { navController.popBackStack() }
