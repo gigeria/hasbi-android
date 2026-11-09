@@ -10,21 +10,8 @@ import javax.inject.Inject
 /**
  * Calculate "Aaj Ka Baqi" — Hasbi's hero feature.
  *
- * Formula:
- *   remainingBudget = cycleBudget - cycleSpent
- *   remainingDays = daysBetween(today, cycleEnd) + 1   // include today
- *   dailySafeSpend = if (remainingDays > 0) remainingBudget / remainingDays else remainingBudget
- *
- * Projection:
- *   elapsedDays = totalCycleDays - remainingDays + 1
- *   currentDailyRate = cycleSpent / max(1, elapsedDays - 1)
- *   projectedTotal = currentDailyRate * totalCycleDays
- *   projectedEnd = cycleBudget - projectedTotal
- *
- * Warning levels:
- *   - GREEN: remainingBudget > 10% of totalBudget
- *   - AMBER: 0 < remainingBudget <= 10%
- *   - RED: remainingBudget <= 0
+ * FIX BAQI-002: Projection now uses elapsedDays directly (not elapsedDays-1).
+ * On day 1, projection is conservative (uses full elapsedDays).
  */
 class CalculateDailySafeSpendUseCase @Inject constructor() {
 
@@ -34,7 +21,6 @@ class CalculateDailySafeSpendUseCase @Inject constructor() {
         now: Long = System.currentTimeMillis(),
         zone: ZoneId = ZoneId.of(DateTimeUtils.DEFAULT_TIMEZONE)
     ): DailySafeSpend? {
-        // No budget configured
         if (cycle == null || cycle.totalBudget <= 0) {
             return null
         }
@@ -54,9 +40,11 @@ class CalculateDailySafeSpendUseCase @Inject constructor() {
             0L
         }
 
-        // Projection: if current pace continues, where will we land?
-        val effectiveElapsedDays = maxOf(1, elapsedDays - 1)
-        val currentDailyRate = if (elapsedDays > 0) cycleSpent / effectiveElapsedDays else 0L
+        // FIX BAQI-002: Use elapsedDays directly (min 1) for projection
+        // Day 1: elapsedDays=1, rate = cycleSpent/1 (conservative enough)
+        // Day 2: elapsedDays=2, rate = cycleSpent/2 (averaged)
+        val effectiveElapsedDays = maxOf(1, elapsedDays)
+        val currentDailyRate = if (cycleSpent > 0) cycleSpent / effectiveElapsedDays else 0L
         val projectedTotal = currentDailyRate * totalDays
         val projectedEndOfMonth = totalBudget - projectedTotal
 
