@@ -81,11 +81,11 @@ fun TransactionsListScreen(
                         value = searchQuery,
                         onValueChange = viewModel::setSearchQuery,
                         placeholder = { Text("Search...", color = colors.textTertiary) },
-                        leadingIcon = { Icon(Icons.outlined.Search, null, tint = colors.textSecondary) },
+                        leadingIcon = { Icon(Icons.Outlined.Search, null, tint = colors.textSecondary) },
                         trailingIcon = {
                             if (searchQuery.isNotEmpty()) {
                                 IconButton(onClick = { viewModel.setSearchQuery("") }) {
-                                    Icon(Icons.outlined.Close, "Clear", tint = colors.textSecondary)
+                                    Icon(Icons.Outlined.Close, "Clear", tint = colors.textSecondary)
                                 }
                             }
                         },
@@ -101,10 +101,10 @@ fun TransactionsListScreen(
                     Text("Transactions", color = colors.textPrimary, fontSize = 20.sp, fontWeight = FontWeight.Bold)
                     Row {
                         IconButton(onClick = { viewModel.setSearchActive(true) }) {
-                            Icon(Icons.outlined.Search, "Search", tint = colors.textSecondary)
+                            Icon(Icons.Outlined.Search, "Search", tint = colors.textSecondary)
                         }
                         IconButton(onClick = { /* Filter sheet */ }) {
-                            Icon(Icons.outlined.FilterList, "Filter", tint = colors.textSecondary)
+                            Icon(Icons.Outlined.FilterList, "Filter", tint = colors.textSecondary)
                         }
                     }
                 }
@@ -220,7 +220,7 @@ private fun FilterChip(
     ) {
         Text(label, color = if (isActive) Color.White else colors.textSecondary, fontSize = 12.sp, fontWeight = FontWeight.Medium)
         if (isActive) {
-            Icon(Icons.outlined.Close, "Remove", tint = Color.White, modifier = Modifier.size(14.dp))
+            Icon(Icons.Outlined.Close, "Remove", tint = Color.White, modifier = Modifier.size(14.dp))
         }
     }
 }
