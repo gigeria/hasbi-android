@@ -36,6 +36,15 @@ fun SettingsScreen(
 ) {
     val settings by viewModel.settings.collectAsState()
     val colors = HasbiTheme.colors
+    var showThemeDialog by remember { mutableStateOf(false) }
+
+    if (showThemeDialog) {
+        ThemePickerDialog(
+            currentMode = settings.themeMode,
+            onSelect = { viewModel.setThemeMode(it); showThemeDialog = false },
+            onDismiss = { showThemeDialog = false }
+        )
+    }
 
     Column(
         modifier = Modifier
@@ -77,7 +86,7 @@ fun SettingsScreen(
                 icon = "🎨",
                 title = "Theme",
                 value = settings.themeMode.name.lowercase().replaceFirstChar { it.uppercase() },
-                onClick = { /* Show theme picker */ },
+                onClick = { showThemeDialog = true },
                 colors = colors
             )
             SettingsRow(
