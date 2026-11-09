@@ -92,6 +92,9 @@ data class TransactionEntity(
     // === Debt linkage ===
     val linkedDebtId: Long? = null,
 
+    // === Project linkage (Phase 1.1) ===
+    val projectId: Long? = null,
+
     // === Soft delete (30-day trash) ===
     val isDeleted: Boolean = false,
     val deletedAt: Long? = null,

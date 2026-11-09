@@ -137,4 +137,7 @@ object DatabaseModule {
 
     @Provides
     fun provideOnboardingDao(database: HasbiDatabase): OnboardingDao = database.onboardingDao()
+
+    @Provides
+    fun provideProjectDao(database: HasbiDatabase): com.hasbi.database.dao.ProjectDao = database.projectDao()
 }

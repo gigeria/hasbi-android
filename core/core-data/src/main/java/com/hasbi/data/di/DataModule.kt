@@ -5,6 +5,7 @@ import com.hasbi.data.repository.CategoryRepositoryImpl
 import com.hasbi.data.repository.CurrencyRepositoryImpl
 import com.hasbi.data.repository.DebtRepositoryImpl
 import com.hasbi.data.repository.SettingsRepositoryImpl
+import com.hasbi.data.repository.ProjectRepositoryImpl
 import com.hasbi.data.repository.TransactionRepositoryImpl
 import com.hasbi.data.repository.WalletRepositoryImpl
 import com.hasbi.domain.repository.BudgetRepository
@@ -12,6 +13,7 @@ import com.hasbi.domain.repository.CategoryRepository
 import com.hasbi.domain.repository.CurrencyRepository
 import com.hasbi.domain.repository.DebtRepository
 import com.hasbi.domain.repository.SettingsRepository
+import com.hasbi.domain.repository.ProjectRepository
 import com.hasbi.domain.repository.TransactionRepository
 import com.hasbi.domain.repository.WalletRepository
 import com.hasbi.datastore.SettingsDataStore
@@ -59,4 +61,8 @@ abstract class DataModule {
     @Binds
     @Singleton
     abstract fun bindSettingsRepository(impl: SettingsRepositoryImpl): SettingsRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindProjectRepository(impl: ProjectRepositoryImpl): ProjectRepository
 }

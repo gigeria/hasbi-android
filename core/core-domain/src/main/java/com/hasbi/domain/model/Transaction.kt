@@ -28,6 +28,7 @@ data class Transaction(
     val isRecurring: Boolean = false,
     val recurringId: Long? = null,
     val linkedDebtId: Long? = null,
+    val projectId: Long? = null,
     val isDeleted: Boolean = false,
     val deletedAt: Long? = null,
     val purgeAfter: Long? = null,

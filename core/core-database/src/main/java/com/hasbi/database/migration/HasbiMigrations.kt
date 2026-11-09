@@ -3,37 +3,31 @@ package com.hasbi.database.migration
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 
-/**
- * Hasbi database migrations.
- *
- * Phase 1: Version 1 — initial schema. No migrations yet.
- *
- * Future migrations (anticipated):
- *
- * Phase 1.1:
- * - MIGRATION_1_2: Add TagEntity + TransactionTagCrossRef tables
- * - MIGRATION_2_3: Add SavingsGoalEntity + SavingsContributionEntity tables
- * - MIGRATION_3_4: Add RecurringTransactionEntity table
- *
- * Phase 2:
- * - MIGRATION_4_5: Add BackupMetadataEntity table
- *
- * Phase 2.1 (tax classification UI):
- * - No migration needed — `financialPurpose`, `businessPercentage`, etc. already in schema
- * - Just populate nullable fields via UI
- *
- * Phase 2.2 (bank import):
- * - No migration needed — `source`, `externalTransactionId`, etc. already in schema
- *
- * Phase 4 (multi-currency conversion):
- * - MIGRATION_5_6: Add ExchangeRateEntity table
- *
- * Key principle: Future-ready fields in Phase 1 schema make most future migrations
- * no-ops or simple table additions.
- */
 object HasbiMigrations {
 
-    val ALL: Array<Migration> = arrayOf(
-        // No migrations in Phase 1 (version 1)
-    )
+    val MIGRATION_1_2 = object : Migration(1, 2) {
+        override fun migrate(db: SupportSQLiteDatabase) {
+            db.execSQL("""
+                CREATE TABLE IF NOT EXISTS projects (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                    name TEXT NOT NULL,
+                    icon TEXT NOT NULL,
+                    colorHex TEXT NOT NULL,
+                    sortOrder INTEGER NOT NULL,
+                    isArchived INTEGER NOT NULL DEFAULT 0,
+                    createdAt INTEGER NOT NULL,
+                    updatedAt INTEGER NOT NULL
+                )
+            """)
+            db.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS index_projects_name ON projects(name)")
+            db.execSQL("CREATE INDEX IF NOT EXISTS index_projects_sortOrder ON projects(sortOrder)")
+            db.execSQL("ALTER TABLE transactions ADD COLUMN projectId INTEGER DEFAULT NULL")
+            
+            val now = System.currentTimeMillis()
+            db.execSQL("INSERT OR IGNORE INTO projects (name, icon, colorHex, sortOrder, isArchived, createdAt, updatedAt) VALUES ('Personal', '🏠', '#1B5E43', 0, 0, $now, $now)")
+            db.execSQL("INSERT OR IGNORE INTO projects (name, icon, colorHex, sortOrder, isArchived, createdAt, updatedAt) VALUES ('Business', '💼', '#2196F3', 1, 0, $now, $now)")
+        }
+    }
+
+    val ALL: Array<Migration> = arrayOf(MIGRATION_1_2)
 }

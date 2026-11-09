@@ -31,6 +31,7 @@ fun SettingsScreen(
     onCategoriesClick: () -> Unit,
     onBackupClick: () -> Unit,
     onAboutClick: () -> Unit = {},
+    onProjectsClick: () -> Unit = {},
     viewModel: SettingsViewModel = hiltViewModel()
 ) {
     val settings by viewModel.settings.collectAsState()

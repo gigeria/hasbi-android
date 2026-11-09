@@ -3,6 +3,8 @@ package com.hasbi.database
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.hasbi.database.converter.HasbiTypeConverters
 import com.hasbi.database.dao.BudgetCycleDao
 import com.hasbi.database.dao.BudgetDao
@@ -10,6 +12,7 @@ import com.hasbi.database.dao.CategoryDao
 import com.hasbi.database.dao.CurrencyDao
 import com.hasbi.database.dao.DebtDao
 import com.hasbi.database.dao.OnboardingDao
+import com.hasbi.database.dao.ProjectDao
 import com.hasbi.database.dao.TransactionDao
 import com.hasbi.database.dao.WalletDao
 import com.hasbi.database.entity.BudgetCycleEntity
@@ -17,22 +20,10 @@ import com.hasbi.database.entity.BudgetEntity
 import com.hasbi.database.entity.CategoryEntity
 import com.hasbi.database.entity.CurrencyEntity
 import com.hasbi.database.entity.DebtEntity
+import com.hasbi.database.entity.ProjectEntity
 import com.hasbi.database.entity.TransactionEntity
 import com.hasbi.database.entity.WalletEntity
 
-/**
- * Hasbi Room database — single source of truth for financial records.
- *
- * Phase 1 entities (7): Currency, Wallet, Category, Transaction, BudgetCycle, Budget, Debt
- *
- * Phase 1.1+ entities (deferred):
- * - TagEntity + TransactionTagCrossRef (Phase 1.1)
- * - SavingsGoalEntity + SavingsContributionEntity (Phase 1.1)
- * - RecurringTransactionEntity (Phase 1.1)
- * - BackupMetadataEntity (Phase 2)
- *
- * Schema is exported to /schemas for migration tracking.
- */
 @Database(
     entities = [
         CurrencyEntity::class,
@@ -41,9 +32,10 @@ import com.hasbi.database.entity.WalletEntity
         TransactionEntity::class,
         BudgetCycleEntity::class,
         BudgetEntity::class,
-        DebtEntity::class
+        DebtEntity::class,
+        ProjectEntity::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = true
 )
 @TypeConverters(HasbiTypeConverters::class)
@@ -57,16 +49,39 @@ abstract class HasbiDatabase : RoomDatabase() {
     abstract fun budgetDao(): BudgetDao
     abstract fun debtDao(): DebtDao
     abstract fun onboardingDao(): OnboardingDao
+    abstract fun projectDao(): ProjectDao
 
     companion object {
         const val DATABASE_NAME = "hasbi.db"
 
-        // Future migrations will be added here:
-        // val MIGRATION_1_2 = Migration(1, 2) { ... }  // Phase 1.1: add Tag tables
-        // val MIGRATION_2_3 = Migration(2, 3) { ... }  // Phase 1.1: add Savings tables
-        // val MIGRATION_3_4 = Migration(3, 4) { ... }  // Phase 1.1: add Recurring table
-        // val MIGRATION_4_5 = Migration(4, 5) { ... }  // Phase 2: add BackupMetadata table
+        val MIGRATION_1_2 = object : Migration(1, 2) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                // Create projects table
+                db.execSQL("""
+                    CREATE TABLE IF NOT EXISTS projects (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                        name TEXT NOT NULL,
+                        icon TEXT NOT NULL,
+                        colorHex TEXT NOT NULL,
+                        sortOrder INTEGER NOT NULL,
+                        isArchived INTEGER NOT NULL DEFAULT 0,
+                        createdAt INTEGER NOT NULL,
+                        updatedAt INTEGER NOT NULL
+                    )
+                """)
+                db.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS index_projects_name ON projects(name)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_projects_sortOrder ON projects(sortOrder)")
 
-        // val ALL_MIGRATIONS = arrayOf(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5)
+                // Add projectId column to transactions (nullable)
+                db.execSQL("ALTER TABLE transactions ADD COLUMN projectId INTEGER DEFAULT NULL")
+
+                // Seed default projects
+                val now = System.currentTimeMillis()
+                db.execSQL("INSERT OR IGNORE INTO projects (name, icon, colorHex, sortOrder, isArchived, createdAt, updatedAt) VALUES ('Personal', '🏠', '#1B5E43', 0, 0, $now, $now)")
+                db.execSQL("INSERT OR IGNORE INTO projects (name, icon, colorHex, sortOrder, isArchived, createdAt, updatedAt) VALUES ('Business', '💼', '#2196F3', 1, 0, $now, $now)")
+            }
+        }
+
+        // Migrations moved to HasbiMigrations object
     }
 }

@@ -190,7 +190,8 @@ fun HasbiNavHost(isOnboarded: Boolean) {
                     onSettingsClick = { navController.navigate("settings") },
                     onBackupClick = { navController.navigate("backup") },
                     onAboutClick = { navController.navigate("about") },
-                    onExportClick = { navController.navigate("export") }
+                    onExportClick = { navController.navigate("export") },
+                    onProjectsClick = { navController.navigate("projects") }
                 )
             }
             composable("debts") {
@@ -209,11 +210,17 @@ fun HasbiNavHost(isOnboarded: Boolean) {
                 com.hasbi.settings.SettingsScreen(
                     onBack = { navController.popBackStack() },
                     onCategoriesClick = { navController.navigate("categories") },
+                    onProjectsClick = { navController.navigate("projects") },
                     onBackupClick = { navController.navigate("backup") },
                     onAboutClick = { navController.navigate("about") }
                 )
             }
             composable("categories") {
+            composable("projects") {
+                com.hasbi.settings.projects.ProjectsScreen(
+                    onBack = { navController.popBackStack() }
+                )
+            }
                 com.hasbi.settings.categories.CategoriesScreen(
                     onBack = { navController.popBackStack() }
                 )
@@ -288,7 +295,8 @@ private fun MoreMenuScreen(
     onSettingsClick: () -> Unit = {},
     onBackupClick: () -> Unit = {},
     onAboutClick: () -> Unit = {},
-    onExportClick: () -> Unit = {}
+    onExportClick: () -> Unit = {},
+    onProjectsClick: () -> Unit = {}
 ) {
     val colors = com.hasbi.design.theme.HasbiTheme.colors
     Column(
