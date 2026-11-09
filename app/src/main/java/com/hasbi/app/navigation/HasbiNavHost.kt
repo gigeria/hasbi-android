@@ -189,7 +189,8 @@ fun HasbiNavHost(isOnboarded: Boolean) {
                     onDebtsClick = { navController.navigate("debts") },
                     onSettingsClick = { navController.navigate("settings") },
                     onBackupClick = { navController.navigate("backup") },
-                    onAboutClick = { navController.navigate("about") }
+                    onAboutClick = { navController.navigate("about") },
+                    onExportClick = { navController.navigate("export") }
                 )
             }
             composable("debts") {
@@ -224,6 +225,11 @@ fun HasbiNavHost(isOnboarded: Boolean) {
             }
             composable("backup") {
                 com.hasbi.backup.BackupScreen(
+                    onBack = { navController.popBackStack() }
+                )
+            }
+            composable("export") {
+                com.hasbi.transactions.export.ExportScreen(
                     onBack = { navController.popBackStack() }
                 )
             }
@@ -281,7 +287,8 @@ private fun MoreMenuScreen(
     onDebtsClick: () -> Unit,
     onSettingsClick: () -> Unit = {},
     onBackupClick: () -> Unit = {},
-    onAboutClick: () -> Unit = {}
+    onAboutClick: () -> Unit = {},
+    onExportClick: () -> Unit = {}
 ) {
     val colors = com.hasbi.design.theme.HasbiTheme.colors
     Column(
@@ -304,6 +311,13 @@ private fun MoreMenuScreen(
             title = "Debt / Udhaar",
             subtitle = "Lent & borrowed records",
             onClick = onDebtsClick,
+            colors = colors
+        )
+        MoreMenuItem(
+            icon = "📊",
+            title = "Export",
+            subtitle = "CSV / PDF report",
+            onClick = onExportClick,
             colors = colors
         )
         MoreMenuItem(
