@@ -207,9 +207,14 @@ fun HasbiNavHost(isOnboarded: Boolean) {
             composable("settings") {
                 com.hasbi.settings.SettingsScreen(
                     onBack = { navController.popBackStack() },
-                    onCategoriesClick = { /* TODO: Categories screen */ },
+                    onCategoriesClick = { navController.navigate("categories") },
                     onBackupClick = { navController.navigate("backup") },
                     onAboutClick = { navController.navigate("about") }
+                )
+            }
+            composable("categories") {
+                com.hasbi.settings.categories.CategoriesScreen(
+                    onBack = { navController.popBackStack() }
                 )
             }
             composable("about") {
