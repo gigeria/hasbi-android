@@ -26,7 +26,7 @@ class AddWalletViewModel @Inject constructor(
         val (icon, color, name) = when (type) {
             WalletType.CASH -> Triple("💵", "#4CAF80", "Cash")
             WalletType.BANK -> Triple("🏦", "#2196F3", "Bank Account")
-            WalletType.MOBILE_WALLET -> Triple("📱", "#E91E63", "Mobile Wallet")
+            WalletType.MOBILE_WALLET -> Triple("📱", "#E91E63", "JazzCash")
             WalletType.CREDIT_CARD -> Triple("💳", "#FF9800", "Credit Card")
             WalletType.SAVINGS -> Triple("🐷", "#9C27B0", "Savings")
             WalletType.CUSTOM -> Triple("⚙️", "#607D8B", "Custom")

@@ -88,7 +88,7 @@ class EditTransactionViewModel @Inject constructor(
                 id = current.transactionId,
                 type = current.type,
                 amount = current.amountInPaisa,
-                walletId = current.selectedWalletId,
+                walletId = current.selectedWalletId ?: 0L,
                 categoryId = if (current.type == TransactionType.TRANSFER) null else current.selectedCategoryId,
                 toWalletId = if (current.type == TransactionType.TRANSFER) current.toWalletId else null,
                 date = current.date,

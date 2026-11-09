@@ -267,7 +267,7 @@ private fun WalletTypeChip(
     val (icon, label) = when (type) {
         WalletType.CASH -> "💵" to "Cash"
         WalletType.BANK -> "🏦" to "Bank"
-        WalletType.MOBILE_WALLET -> "📱" to "Mobile"
+        WalletType.MOBILE_WALLET -> "📱" to "JazzCash"
         WalletType.CREDIT_CARD -> "💳" to "Card"
         WalletType.SAVINGS -> "🐷" to "Savings"
         WalletType.CUSTOM -> "⚙️" to "Custom"

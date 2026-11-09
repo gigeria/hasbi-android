@@ -153,13 +153,13 @@ private fun DashboardContent(
                     HasbiArchLogo(size = 36.dp, showArabic = false)
                     Column {
                         Text(
-                            text = "Assalam-o-Alaikum",
+                            text = "Welcome back",
                             color = colors.textSecondary,
                             fontSize = 11.sp,
                             fontWeight = FontWeight.Medium
                         )
                         Text(
-                            text = "Aaj ka hisab dekh lein",
+                            text = "Today's Summary",
                             color = colors.primary,
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold

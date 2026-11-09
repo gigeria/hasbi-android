@@ -276,3 +276,13 @@ private fun calculateProgress(baqi: DailySafeSpend): Float {
     return if (baqi.totalBudget <= 0) 0f
     else (baqi.cycleSpent.toFloat() / baqi.totalBudget.toFloat()).coerceIn(0f, 1f)
 }
+
+// Financial tips for Aaj Ka Baqi card
+val financialTips = listOf(
+    "💡 Tip: Roz ka hisab rakhein, mahine ka stress khatam.",
+    "💡 Tip: 50/30/20 rule: 50% zaroorat, 30% khwahish, 20% bachat.",
+    "💡 Tip: Pehle khud ko pay karein — pehle savings, phir kharch.",
+    "💡 Tip: Chhote kharch bhi hisab mein rakhein — chai, nashta.",
+    "💡 Tip: Mahine ka budget slightly kam rakhein, taake bachat ho.",
+    "💡 Tip: Udhaar dena asaan, wapas lena mushkil — soch samajh dein."
+)

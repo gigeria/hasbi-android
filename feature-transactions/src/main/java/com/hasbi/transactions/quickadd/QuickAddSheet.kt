@@ -134,6 +134,7 @@ private fun QuickAddContent(
     Column(
         modifier = Modifier
             .fillMaxWidth()
+            .verticalScroll(rememberScrollState())
             .padding(horizontal = 20.dp, vertical = 12.dp)
     ) {
         // Title
@@ -473,7 +474,7 @@ private fun CategoryChip(
         Text(
             text = category.name,
             color = textColor,
-            fontSize = 10.sp,
+            fontSize = 9.sp,
             fontWeight = FontWeight.Medium,
             textAlign = TextAlign.Center
         )
