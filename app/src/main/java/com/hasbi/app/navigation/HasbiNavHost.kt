@@ -158,6 +158,7 @@ fun HasbiNavHost(isOnboarded: Boolean) {
             composable(Routes.TRANSACTIONS) {
                 TransactionsListScreen(
                     onTransactionClick = { txId ->
+                        navController.navigate("edit-transaction/$txId")
                         // Show detail sheet (handled by state in Week 7)
                         // For now, no-op
                     },
@@ -234,6 +235,14 @@ fun HasbiNavHost(isOnboarded: Boolean) {
             composable("backup") {
                 com.hasbi.backup.BackupScreen(
                     onBack = { navController.popBackStack() }
+                )
+            }
+            composable("edit-transaction/{txId}") { backStackEntry ->
+                val txId = backStackEntry.arguments?.getString("txId")?.toLongOrNull() ?: 0L
+                com.hasbi.transactions.quickadd.EditTransactionScreen(
+                    transactionId = txId,
+                    onBack = { navController.popBackStack() },
+                    onSaved = { navController.popBackStack() }
                 )
             }
             composable("export") {
