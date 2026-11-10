@@ -133,137 +133,144 @@ private fun QuickAddContent(
     onSave: () -> Unit,
     colors: com.hasbi.design.theme.HasbiColorPalette
 ) {
+    // Outer Column — NO scroll, holds scrollable content + fixed save button
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .verticalScroll(rememberScrollState())
             .padding(horizontal = 20.dp, vertical = 12.dp)
     ) {
-        // Title
-        Text(
-            text = "Add Transaction",
-            color = colors.textPrimary,
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(bottom = 16.dp)
-        )
-
-        // Type tabs
-        TypeTabs(
-            selectedType = state.type,
-            onTypeChange = onTypeChange,
-            colors = colors
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Amount input
-        AmountInput(
-            amountText = state.amountText,
-            onAmountChange = onAmountChange,
-            colors = colors
-        )
-
-        Spacer(modifier = Modifier.height(12.dp))
-
-        // Smart Entry hint
-        SmartEntryHint(
-            text = state.smartEntryText,
-            onTextChange = onSmartEntryChange,
-            result = state.smartEntryResult,
-            colors = colors
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Category grid (only for expense/income, not transfer)
-        if (state.type != TransactionType.TRANSFER) {
+        // Inner Column — scrollable content
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .verticalScroll(rememberScrollState())
+        ) {
+            // Title
             Text(
-                text = "Category",
+                text = "Add Transaction",
+                color = colors.textPrimary,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
+
+            // Type tabs
+            TypeTabs(
+                selectedType = state.type,
+                onTypeChange = onTypeChange,
+                colors = colors
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Amount input
+            AmountInput(
+                amountText = state.amountText,
+                onAmountChange = onAmountChange,
+                colors = colors
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            // Smart Entry hint
+            SmartEntryHint(
+                text = state.smartEntryText,
+                onTextChange = onSmartEntryChange,
+                result = state.smartEntryResult,
+                colors = colors
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Category grid (only for expense/income, not transfer)
+            if (state.type != TransactionType.TRANSFER) {
+                Text(
+                    text = "Category",
+                    color = colors.textSecondary,
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.SemiBold
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+
+                CategoryGrid(
+                    categories = categories,
+                    selectedCategoryId = state.selectedCategoryId,
+                    onSelect = onCategorySelect,
+                    colors = colors
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+
+            // Wallet selector
+            Text(
+                text = if (state.type == TransactionType.TRANSFER) "From Wallet" else "Wallet",
                 color = colors.textSecondary,
                 fontSize = 12.sp,
                 fontWeight = FontWeight.SemiBold
             )
             Spacer(modifier = Modifier.height(8.dp))
 
-            CategoryGrid(
-                categories = categories,
-                selectedCategoryId = state.selectedCategoryId,
-                onSelect = onCategorySelect,
+            WalletSelectorRow(
+                wallets = wallets,
+                selectedWalletId = state.selectedWalletId,
+                onSelect = onWalletSelect,
                 colors = colors
             )
 
             Spacer(modifier = Modifier.height(16.dp))
-        }
 
-        // Wallet selector
-        Text(
-            text = if (state.type == TransactionType.TRANSFER) "From Wallet" else "Wallet",
-            color = colors.textSecondary,
-            fontSize = 12.sp,
-            fontWeight = FontWeight.SemiBold
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-
-        WalletSelectorRow(
-            wallets = wallets,
-            selectedWalletId = state.selectedWalletId,
-            onSelect = onWalletSelect,
-            colors = colors
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Date selector (FEAT-005: Date picker)
-        Text(
-            text = "Date",
-            color = colors.textSecondary,
-            fontSize = 12.sp,
-            fontWeight = FontWeight.SemiBold
-        )
-        Spacer(modifier = Modifier.height(6.dp))
-        DatePickerField(
-            selectedDate = state.date,
-            onDateSelected = onDateChange,
-            colors = colors
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Receipt photo (FEAT-004: Receipt photo integration)
-        ReceiptPhotoPicker(
-            photoUri = state.attachmentPath,
-            onPhotoSelected = onPhotoChange
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Note (optional)
-        OutlinedTextField(
-            value = state.note,
-            onValueChange = onNoteChange,
-            placeholder = {
-                Text(text = "Note (optional)", color = colors.textTertiary)
-            },
-            singleLine = true,
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(12.dp)
-        )
-
-        // Error message
-        state.error?.let { error ->
-            Spacer(modifier = Modifier.height(8.dp))
+            // Date selector
             Text(
-                text = error,
-                color = colors.expense,
+                text = "Date",
+                color = colors.textSecondary,
                 fontSize = 12.sp,
-                fontWeight = FontWeight.Medium
+                fontWeight = FontWeight.SemiBold
             )
+            Spacer(modifier = Modifier.height(6.dp))
+            DatePickerField(
+                selectedDate = state.date,
+                onDateSelected = onDateChange,
+                colors = colors
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Receipt photo
+            ReceiptPhotoPicker(
+                photoUri = state.attachmentPath,
+                onPhotoSelected = onPhotoChange
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Note (optional)
+            OutlinedTextField(
+                value = state.note,
+                onValueChange = onNoteChange,
+                placeholder = {
+                    Text(text = "Note (optional)", color = colors.textTertiary)
+                },
+                singleLine = true,
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(12.dp)
+            )
+
+            // Error message
+            state.error?.let { error ->
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = error,
+                    color = colors.expense,
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Medium
+                )
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Save button
+        // Save button — ALWAYS visible (outside scroll, at bottom)
         Button(
             onClick = onSave,
             modifier = Modifier
@@ -295,6 +302,7 @@ private fun QuickAddContent(
         Spacer(modifier = Modifier.height(8.dp))
     }
 }
+
 
 @Composable
 private fun TypeTabs(

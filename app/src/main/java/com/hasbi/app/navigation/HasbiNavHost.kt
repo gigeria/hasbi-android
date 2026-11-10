@@ -289,8 +289,7 @@ private val mainRoutes = setOf(
 
 private val fabRoutes = setOf(
     Routes.DASHBOARD,
-    Routes.TRANSACTIONS,
-    Routes.WALLETS
+    Routes.TRANSACTIONS
 )
 
 private data class BottomNavItem(

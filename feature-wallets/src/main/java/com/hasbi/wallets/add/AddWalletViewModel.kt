@@ -23,20 +23,21 @@ class AddWalletViewModel @Inject constructor(
     val state: StateFlow<AddWalletState> = _state.asStateFlow()
 
     fun setType(type: WalletType) {
+        // FIX: Always set default name + icon + color for the selected type
         val (icon, color, name) = when (type) {
             WalletType.CASH -> Triple("💵", "#4CAF80", "Cash")
             WalletType.BANK -> Triple("🏦", "#2196F3", "Bank Account")
             WalletType.MOBILE_WALLET -> Triple("📱", "#E91E63", "JazzCash")
             WalletType.CREDIT_CARD -> Triple("💳", "#FF9800", "Credit Card")
             WalletType.SAVINGS -> Triple("🐷", "#9C27B0", "Savings")
-            WalletType.CUSTOM -> Triple("⚙️", "#607D8B", "Custom")
+            WalletType.CUSTOM -> Triple("⚙️", "#607D8B", "Custom Wallet")
         }
         _state.update {
             it.copy(
                 type = type,
                 icon = icon,
                 colorHex = color,
-                name = if (it.name.isBlank() || it.name in listOf("Cash", "Bank Account", "Mobile Wallet", "Credit Card", "Savings", "Custom")) name else it.name
+                name = name  // FIX: always set default name for type
             )
         }
     }
@@ -72,6 +73,14 @@ class AddWalletViewModel @Inject constructor(
         _state.update { it.copy(isSaving = true, error = null) }
 
         viewModelScope.launch {
+            // FIX: Get next sortOrder
+            val existingWallets = walletRepository.observeVisible()
+            var maxSort = 0
+            existingWallets.collect { list ->
+                maxSort = list.maxOfOrNull { it.sortOrder } ?: 0
+                return@collect
+            }
+
             val now = System.currentTimeMillis()
             val wallet = Wallet(
                 name = current.name,
@@ -80,7 +89,7 @@ class AddWalletViewModel @Inject constructor(
                 colorHex = current.colorHex,
                 initialBalance = current.initialBalanceInPaisa,
                 currencyCode = "PKR",
-                sortOrder = 0,
+                sortOrder = maxSort + 1,  // FIX: proper sort order
                 createdAt = now,
                 updatedAt = now
             )
