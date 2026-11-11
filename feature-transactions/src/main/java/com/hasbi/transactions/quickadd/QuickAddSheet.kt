@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -144,6 +145,7 @@ private fun QuickAddContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .verticalScroll(rememberScrollState())
+                .imePadding()
         ) {
             // Title
             Text(
@@ -502,7 +504,7 @@ private fun WalletSelectorRow(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        wallets.take(4).forEach { wallet ->
+        wallets.forEach { wallet ->
             val isSelected = wallet.id == selectedWalletId
             val bgColor = if (isSelected) colors.primary else colors.backgroundWarm
             val textColor = if (isSelected) Color.White else colors.textPrimary

@@ -57,6 +57,7 @@ fun AddDebtScreen(
             .fillMaxSize()
             .background(colors.background)
             .verticalScroll(rememberScrollState())
+            .imePadding()
             .padding(horizontal = 20.dp, vertical = 12.dp)
     ) {
         // Top bar
@@ -153,7 +154,7 @@ fun AddDebtScreen(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            wallets.take(4).forEach { wallet ->
+            wallets.forEach { wallet ->
                 val isSelected = state.selectedWalletId == wallet.id
                 WalletChip(
                     wallet = wallet,

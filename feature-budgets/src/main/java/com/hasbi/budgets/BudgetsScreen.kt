@@ -17,7 +17,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -70,13 +69,27 @@ fun BudgetsScreen(
                 .fillMaxSize()
                 .padding(horizontal = 20.dp, vertical = 16.dp)
         ) {
-            // Top bar
-            Text(
-                text = "Budgets",
-                color = colors.textPrimary,
-                fontSize = 22.sp,
-                fontWeight = FontWeight.Bold
-            )
+            // Top bar with Add Budget button
+            androidx.compose.foundation.layout.Row(
+                modifier = androidx.compose.ui.Modifier.fillMaxWidth(),
+                horizontalArrangement = androidx.compose.foundation.layout.Arrangement.SpaceBetween,
+                verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Budgets",
+                    color = colors.textPrimary,
+                    fontSize = 22.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                androidx.compose.material3.TextButton(onClick = onAddBudgetClick) {
+                    androidx.compose.material3.Text(
+                        text = "+ Add Budget",
+                        color = colors.primary,
+                        fontSize = 14.sp,
+                        fontWeight = androidx.compose.ui.text.font.FontWeight.SemiBold
+                    )
+                }
+            }
 
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -126,21 +139,8 @@ fun BudgetsScreen(
             }
         }
 
-        // FAB
-        FloatingActionButton(
-            onClick = onAddBudgetClick,
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(20.dp),
-            containerColor = colors.primary,
-            contentColor = Color.White,
-            shape = RoundedCornerShape(18.dp)
-        ) {
-            Icon(
-                imageVector = Icons.Filled.Add,
-                contentDescription = "Add Budget"
-            )
-        }
+        // Add Budget button — at top right (not FAB which overlaps bottom nav)
+        // Removed FAB to fix navigation issue — button in header instead
     }
 }
 
